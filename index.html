@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAST CASH Wallet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS - The Design and Styling */
+
+        :root {
+            --primary-color: #0a0a2a;
+            --secondary-color: #1a1a3a;
+            --accent-color: #00ff9d;
+            --text-color: #f0f0f0;
+            --text-muted: #a0a0b0;
+            --success-color: #00ff9d;
+            --error-color: #ff4d4d;
+            --card-bg: #1e1e3f;
+            --input-bg: #2a2a4f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Page Containers --- */
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- Auth Page (Login/Signup) --- */
+        #auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-form-container {
+            background-color: var(--secondary-color);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .auth-form-container h1 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .auth-form-container p {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--accent-color), #00c476);
+            border: none;
+            border-radius: 10px;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .auth-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 157, 0.2);
+        }
+        
+        .auth-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        .auth-options label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .auth-options input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        
+        .auth-switch, .forgot-password {
+            color: var(--accent-color);
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* --- Dashboard --- */
+        #dashboard-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        #sidebar {
+            width: 250px;
+            background-color: var(--secondary-color);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        #sidebar .logo {
+            color: var(--accent-color);
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 15px;
+            margin: 5px 0;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .sidebar-menu a svg {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+        }
+
+        #main-content {
+            flex-grow: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+        }
+        
+        #welcome-user {
+            font-weight: 400;
+        }
+
+        .balance-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .balance-card, .account-details-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .balance-card h3, .account-details-card h3 {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .balance-card #balance-amount {
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .account-details-card #user-account-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            letter-spacing: 1px;
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+            background-color: var(--secondary-color);
+            border-color: var(--accent-color);
+        }
+        
+        .action-btn .icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .action-btn p {
+            font-weight: 500;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .transaction-history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transaction-history th, .transaction-history td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        .transaction-history th {
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--input-bg);
+        }
+        
+        .transaction-history tbody tr {
+            border-bottom: 1px solid var(--input-bg);
+        }
+        
+        .transaction-history tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-sent {
+            background-color: rgba(255, 77, 77, 0.2);
+            color: var(--error-color);
+        }
+
+        .status-received {
+            background-color: rgba(0, 255, 157, 0.2);
+            color: var(--success-color);
+        }
+
+        /* --- Modals --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Changed to none */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex; /* Activate by changing display to flex */
+        }
+
+        .modal-content {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            animation: slideIn 0.3s ease-out;
+            position: relative;
+        }
+        
+        .modal-content .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-content h2 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+        
+        .modal-content .form-group select {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        /* --- Receipt Modal --- */
+        #receipt-content {
+            text-align: center;
+        }
+
+        #receipt-content .success-animation {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        #receipt-content .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: var(--primary-color);
+            animation: pop 0.5s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        #receipt-content h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .receipt-details {
+            text-align: left;
+            margin: 20px 0;
+            border-top: 1px solid var(--input-bg);
+            border-bottom: 1px solid var(--input-bg);
+            padding: 20px 0;
+        }
+
+        .receipt-details p {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .receipt-details span {
+            color: var(--text-muted);
+        }
+
+        #receipt-amount {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .receipt-actions button {
+            padding: 10px 20px;
+        }
+
+        /* --- Account Creation --- */
+        #account-creation-page .auth-form-container {
+            max-width: 600px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            background-color: var(--input-bg);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .file-input-wrapper:hover {
+            background-color: #3a3a5f;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            #dashboard-container {
+                flex-direction: column;
+            }
+            
+            #sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 10px;
+                order: 2; /* Move to bottom */
+            }
+            
+            #sidebar .logo, #sidebar .logout-btn span {
+                display: none;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                padding: 10px 5px;
+                font-size: 0.8rem;
+            }
+
+            .sidebar-menu a svg {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            #main-content {
+                padding: 20px;
+            }
+
+            .balance-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== AUTHENTICATION PAGE ======== -->
+    <div id="auth-page" class="page active">
+        <div id="auth-container">
+            <!-- Login Form -->
+            <div id="login-form-container" class="auth-form-container">
+                <h1>FAST CASH</h1>
+                <p>Welcome back! Sign in to your wallet.</p>
+                <form id="login-form">
+                    <div class="form-group">
+                        <input type="text" id="login-name" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="login-password" placeholder="Password" required>
+                    </div>
+                    <p id="login-error" class="error-message hidden"></p>
+                    <button type="submit" class="auth-button">Sign In</button>
+                    <div class="auth-options">
+                        <label><input type="checkbox" id="remember-me" checked> Remember me</label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                </form>
+                <p style="margin-top: 20px; text-align: center;">
+                    New user? <a href="#" id="show-signup" class="auth-switch">Create an account</a>
+                </p>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form-container" class="auth-form-container hidden">
+                <h1>Create Account</h1>
+                <p>Join FAST CASH today. It's free and easy.</p>
+                <form id="signup-form">
+                    <div class="form-group">
+                        <input type="text" id="signup-name" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="signup-password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required>
+                    </div>
+                     <div class="form-group">
+                        <input type="text" id="signup-nin" placeholder="NIN (National Identification Number)" required minlength="11" maxlength="11">
+                    </div>
+                    <p id="signup-error" class="error-message hidden"></p>
+                    <button type="submit" class="auth-button">Sign Up</button>
+                </form>
+                <p style="margin-top: 20px; text-align: center;">
+                    Already have an account? <a href="#" id="show-login" class="auth-switch">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======== ACCOUNT CREATION PAGE ======== -->
+    <div id="account-creation-page" class="page">
+        <div id="auth-container">
+             <div class="auth-form-container">
+                <h1>Final Step</h1>
+                <p>Secure your account and get your wallet number.</p>
+                <form id="account-creation-form">
+                    <div class="form-group">
+                        <input type="text" id="ac-home-address" placeholder="Home Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="ac-phone-number" placeholder="Phone Number" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="ac-email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="ac-pin" placeholder="Create 4-Digit Transfer PIN" required maxlength="4" pattern="\d{4}">
+                    </div>
+                    <div class="form-group">
+                        <div class="file-input-wrapper">
+                           <span>Click to upload Passport Photo</span>
+                           <input type="file" id="ac-passport" accept="image/*" required>
+                        </div>
+                    </div>
+                    <p id="ac-error" class="error-message hidden"></p>
+                    <button type="submit" class="auth-button">Create My Wallet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ======== DASHBOARD ======== -->
+    <div id="dashboard-page" class="page">
+        <div id="dashboard-container">
+            <!-- Sidebar -->
+            <div id="sidebar">
+                <div class="logo">FC</div>
+                <div class="sidebar-menu">
+                    <a href="#" class="active"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg> <span>Home</span></a>
+                    <a href="#" id="menu-qr-code"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM10 4a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1V4zM9 9a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 00-1-1H9zM15 9a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 00-1-1h-2zM3 16a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM10 16a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2z"></path></svg> <span>My QR Code</span></a>
+                    <a href="#" id="menu-change-pin"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg> <span>Change PIN</span></a>
+                    <a href="#" id="menu-change-password"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.932-.5A5.002 5.002 0 0010 2z"></path></svg> <span>Change Password</span></a>
+                    <a href="#" class="logout-btn" id="logout-button"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"></path></svg> <span>Logout</span></a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div id="main-content">
+                <div class="header">
+                    <h2>Hello, <span id="welcome-user"></span>!</h2>
+                </div>
+                
+                <div class="balance-section">
+                    <div class="balance-card">
+                        <h3>Ledger / Available Balance</h3>
+                        <p id="balance-amount">₦1,000.00</p>
+                    </div>
+                     <div class="account-details-card">
+                        <h3>Your Account Number</h3>
+                        <p id="user-account-number">0123456789</p>
+                    </div>
+                </div>
+
+                <div class="actions-grid">
+                    <div class="action-btn" id="send-money-btn">
+                        <div class="icon">💸</div>
+                        <p>Send Money</p>
+                    </div>
+                    <div class="action-btn" id="pay-bills-btn">
+                        <div class="icon">📄</div>
+                        <p>Pay Bills</p>
+                    </div>
+                    <div class="action-btn" id="fund-wallet-btn">
+                        <div class="icon">💰</div>
+                        <p>Fund Wallet</p>
+                    </div>
+                     <div class="action-btn" id="statement-btn">
+                        <div class="icon">📊</div>
+                        <p>Statement</p>
+                    </div>
+                </div>
+
+                <div class="transaction-history">
+                    <h3 class="section-title">Transaction History</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-list">
+                            <!-- JS will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======== MODALS ======== -->
+
+    <!-- Send Money Modal -->
+    <div id="send-money-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h2>Send Money</h2>
+            <form id="send-money-form">
+                <div class="form-group">
+                    <input type="text" id="recipient-bank" placeholder="Beneficiary Bank Name" required>
+                </div>
+                 <div class="form-group">
+                    <input type="text" id="recipient-account" placeholder="Beneficiary Account Number" required pattern="\d{10}" maxlength="10">
+                </div>
+                 <div class="form-group">
+                    <input type="text" id="recipient-name" placeholder="Beneficiary Account Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="send-amount" placeholder="Amount (₦)" required min="1">
+                </div>
+                 <button type="submit" class="auth-button">Proceed</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pay Bills Modal -->
+    <div id="pay-bills-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h2>Pay Bills</h2>
+            <form id="pay-bills-form">
+                <div class="form-group">
+                    <select id="biller-select" required>
+                        <option value="">-- Select Biller --</option>
+                        <!-- Options will be added by JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="biller-customer-id" placeholder="Customer ID / Meter No." required>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="bill-amount" placeholder="Amount (₦)" required min="1">
+                </div>
+                <button type="submit" class="auth-button">Pay Bill</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Fund Wallet Modal -->
+    <div id="fund-wallet-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h2>Fund Your Wallet</h2>
+            <p style="color:var(--text-muted); margin-bottom: 20px;">Enter the amount you wish to add to your balance.</p>
+            <form id="fund-wallet-form">
+                <div class="form-group">
+                    <input type="number" id="fund-amount" placeholder="Amount to Fund (₦)" required min="1">
+                </div>
+                <button type="submit" class="auth-button">Add Funds</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- PIN Entry Modal -->
+    <div id="pin-entry-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h2 id="pin-modal-title">Enter Your PIN</h2>
+            <p id="pin-modal-prompt" style="color:var(--text-muted); margin-bottom: 20px;">Enter your 4-digit PIN to authorize this transaction.</p>
+            <form id="pin-entry-form">
+                <div class="form-group">
+                    <input type="password" id="transaction-pin" placeholder="****" required maxlength="4" pattern="\d{4}" style="text-align:center; font-size: 1.5rem; letter-spacing: 1em;">
+                </div>
+                 <p id="pin-error" class="error-message hidden"></p>
+                <button type="submit" class="auth-button">Authorize</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Transaction Receipt Modal -->
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content" id="receipt-content">
+            <div class="success-animation">
+                <div class="success-icon">✓</div>
+            </div>
+            <h2>Transaction Successful!</h2>
+            <p id="receipt-amount">₦0.00</p>
+            <div class="receipt-details">
+                <p><span>Beneficiary:</span> <strong id="receipt-beneficiary-name"></strong></p>
+                <p><span>Bank:</span> <strong id="receipt-beneficiary-bank"></strong></p>
+                <p><span>Account No:</span> <strong id="receipt-beneficiary-account"></strong></p>
+                <p><span>Reference Code:</span> <strong id="receipt-ref-code"></strong></p>
+            </div>
+            <div class="receipt-actions">
+                <button class="auth-button" id="receipt-share-btn">Share</button>
+                <button class="auth-button" id="receipt-download-btn">Download PDF</button>
+                <button class="auth-button" id="receipt-close-btn" style="background:var(--card-bg); color: var(--text-color);">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Other Modals (QR, Change PIN/Pass) -->
+    <div id="qr-code-modal" class="modal">
+        <div class="modal-content" style="text-align:center;">
+             <span class="close-btn">×</span>
+            <h2>Your QR Code</h2>
+            <p>Scan to get paid instantly.</p>
+            <div id="qr-code-container" style="background:white; padding:20px; margin: 20px auto; display:inline-block;">
+                <!-- QR Code will be generated here -->
+            </div>
+            <p><strong>Name:</strong> <span id="qr-name"></span></p>
+            <p><strong>Account:</strong> <span id="qr-account"></span></p>
+        </div>
+    </div>
+
+    <div id="change-password-modal" class="modal">
+         <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h2>Change Password</h2>
+            <form id="change-password-form">
+                <div class="form-group">
+                    <input type="password" id="current-password" placeholder="Current Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="new-password" placeholder="New Password" required>
+                </div>
+                 <div class="form-group">
+                    <input type="password" id="confirm-new-password" placeholder="Confirm New Password" required>
+                </div>
+                <p id="change-pass-error" class="error-message hidden"></p>
+                <button type="submit" class="auth-button">Update Password</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="change-pin-modal" class="modal">
+         <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h2>Change Transfer PIN</h2>
+            <form id="change-pin-form">
+                <div class="form-group">
+                    <input type="password" id="current-pin" placeholder="Current 4-Digit PIN" required maxlength="4">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="new-pin" placeholder="New 4-Digit PIN" required maxlength="4">
+                </div>
+                 <div class="form-group">
+                    <input type="password" id="confirm-new-pin" placeholder="Confirm New PIN" required maxlength="4">
+                </div>
+                <p id="change-pin-error" class="error-message hidden"></p>
+                <button type="submit" class="auth-button">Update PIN</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+    // JAVASCRIPT - The Brains of the Application
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DATA MANAGEMENT (using localStorage to simulate a database) ---
+        const DB = {
+            getUsers: () => JSON.parse(localStorage.getItem('fastCashUsers')) || [],
+            saveUsers: (users) => localStorage.setItem('fastCashUsers', JSON.stringify(users)),
+            getAccounts: () => JSON.parse(localStorage.getItem('fastCashAccounts')) || [],
+            saveAccounts: (accounts) => localStorage.setItem('fastCashAccounts', JSON.stringify(accounts)),
+            getLoggedInUser: () => JSON.parse(sessionStorage.getItem('fastCashLoggedInUser')),
+            setLoggedInUser: (user) => sessionStorage.setItem('fastCashLoggedInUser', JSON.stringify(user)),
+            logoutUser: () => sessionStorage.removeItem('fastCashLoggedInUser')
+        };
+
+        // --- STATE MANAGEMENT ---
+        let currentUser = null;
+        let currentAccount = null;
+        let pinAction = null; // To store what action the PIN is for ('send', 'bill', 'fund')
+        let transactionData = {}; // To hold temporary transaction data
+
+        // --- DOM ELEMENTS ---
+        const pages = {
+            auth: document.getElementById('auth-page'),
+            accountCreation: document.getElementById('account-creation-page'),
+            dashboard: document.getElementById('dashboard-page')
+        };
+        const modals = {
+            sendMoney: document.getElementById('send-money-modal'),
+            payBills: document.getElementById('pay-bills-modal'),
+            fundWallet: document.getElementById('fund-wallet-modal'),
+            pinEntry: document.getElementById('pin-entry-modal'),
+            receipt: document.getElementById('receipt-modal'),
+            qrCode: document.getElementById('qr-code-modal'),
+            changePass: document.getElementById('change-password-modal'),
+            changePin: document.getElementById('change-pin-modal')
+        };
+
+        // --- UTILITY & HELPER FUNCTIONS ---
+        const showPage = (pageId) => {
+            Object.values(pages).forEach(page => page.classList.remove('active'));
+            if (pages[pageId]) pages[pageId].classList.add('active');
+        };
+
+        const showModal = (modalId) => {
+            if (modals[modalId]) modals[modalId].classList.add('active');
+        };
+        
+        const hideAllModals = () => {
+            Object.values(modals).forEach(modal => modal.classList.remove('active'));
+        };
+
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(amount);
+        };
+        
+        const generateAccountNumber = () => {
+            const accounts = DB.getAccounts();
+            let newAcc;
+            do {
+                newAcc = Math.random().toString().slice(2, 12);
+            } while (accounts.some(acc => acc.accountNumber === newAcc));
+            return newAcc;
+        };
+        
+        const generateReferenceCode = () => {
+            return 'FC' + Date.now().toString() + Math.random().toString(36).substr(2, 18).toUpperCase();
+        };
+        
+        const displayError = (elementId, message) => {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.classList.remove('hidden');
+        };
+        
+        const hideError = (elementId) => {
+            const el = document.getElementById(elementId);
+            el.classList.add('hidden');
+        };
+        
+        // --- BILLER DATA (Simulation of API data) ---
+        const billers = {
+            "ikeja-electric": { name: "Ikeja Electric", account: "0011223344", bank: "GTBank" },
+            "eko-electric": { name: "Eko Electric", account: "1122334455", bank: "First Bank" },
+            "waste-bill": { name: "LAWMA Waste Bill", account: "2233445566", bank: "Zenith Bank" },
+            "bet9ja": { name: "Bet9ja", account: "9988776655", bank: "Wema Bank" },
+            "betking": { name: "BetKing", account: "8877665544", bank: "UBA" },
+            "sportybet": { name: "SportyBet", account: "7766554433", bank: "Access Bank" },
+            "firs-tax": { name: "FIRS Tax Payment", account: "6655443322", bank: "CBN" },
+            "bodogwu": { name: "B Odogwu Payment", account: "5544332211", bank: "Kuda MFB" },
+            "stamp-duty": { name: "Stamp Duty Charge", account: "4433221100", bank: "CBN" },
+            "remita": { name: "Remita", account: "3322110099", bank: "SystemSpecs" },
+        };
+
+        const populateBillers = () => {
+            const select = document.getElementById('biller-select');
+            select.innerHTML = '<option value="">-- Select Biller --</option>';
+            for (const [key, value] of Object.entries(billers)) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = value.name;
+                select.appendChild(option);
+            }
+        };
+
+        // --- CORE LOGIC ---
+
+        const updateDashboard = () => {
+            if (!currentUser || !currentAccount) return;
+            document.getElementById('welcome-user').textContent = currentUser.name.split(' ')[0];
+            document.getElementById('balance-amount').textContent = formatCurrency(currentAccount.balance);
+            document.getElementById('user-account-number').textContent = currentAccount.accountNumber;
+
+            const transactionList = document.getElementById('transaction-list');
+            transactionList.innerHTML = '';
+            
+            if (!currentAccount.transactions || currentAccount.transactions.length === 0) {
+                transactionList.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No transactions yet.</td></tr>';
+                currentAccount.transactions = []; // Ensure it's an array
+            }
+            
+            // Add welcome bonus as first transaction if it doesn't exist
+            if (!currentAccount.transactions.some(t => t.description === "Welcome Bonus")) {
+                currentAccount.transactions.unshift({
+                    description: "Welcome Bonus",
+                    date: new Date().toLocaleDateString(),
+                    amount: 1000,
+                    type: 'received',
+                    statusClass: 'status-received'
+                });
+            }
+
+            currentAccount.transactions.slice(0, 10).forEach(tx => { // Show last 10
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${tx.description}</td>
+                    <td>${tx.date}</td>
+                    <td class="${tx.statusClass}">${tx.type === 'sent' ? '-' : '+'}${formatCurrency(tx.amount)}</td>
+                    <td><span class="transaction-status ${tx.statusClass}">${tx.type}</span></td>
+                `;
+                transactionList.appendChild(row);
+            });
+        };
+
+        const handleLogin = (e) => {
+            e.preventDefault();
+            const name = document.getElementById('login-name').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            const users = DB.getUsers();
+            const userFound = users.find(u => u.name.toLowerCase() === name.toLowerCase() && u.password === password);
+
+            if (userFound) {
+                currentUser = userFound;
+                const accounts = DB.getAccounts();
+                currentAccount = accounts.find(acc => acc.userId === currentUser.id);
+                DB.setLoggedInUser(currentUser);
+
+                if (currentAccount) {
+                    populateBillers();
+                    updateDashboard();
+                    showPage('dashboard');
+                } else {
+                    showPage('accountCreation');
+                }
+                hideError('login-error');
+            } else {
+                displayError('login-error', 'Invalid name or password.');
+            }
+        };
+
+        const handleSignUp = (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            const nin = document.getElementById('signup-nin').value.trim();
+            
+            if (password !== confirmPassword) {
+                return displayError('signup-error', 'Passwords do not match.');
+            }
+            if (!/^\d{11}$/.test(nin)) {
+                 return displayError('signup-error', 'NIN must be 11 digits.');
+            }
+            
+            const users = DB.getUsers();
+            if (users.some(u => u.name.toLowerCase() === name.toLowerCase())) {
+                return displayError('signup-error', 'A user with this name already exists.');
+            }
+            if (users.some(u => u.nin === nin)) {
+                return displayError('signup-error', 'A user with this NIN is already registered.');
+            }
+
+            const newUser = {
+                id: Date.now(),
+                name,
+                password,
+                nin
+            };
+            users.push(newUser);
+            DB.saveUsers(users);
+            
+            // Switch to login form
+            document.getElementById('signup-form-container').classList.add('hidden');
+            document.getElementById('login-form-container').classList.remove('hidden');
+            document.getElementById('login-name').value = name;
+            document.getElementById('login-password').focus();
+            alert('Sign up successful! Please log in.');
+            hideError('signup-error');
+        };
+
+        const handleAccountCreation = (e) => {
+            e.preventDefault();
+            currentUser = DB.getLoggedInUser();
+            if (!currentUser) return; // Should not happen
+
+            const accounts = DB.getAccounts();
+            const newAccount = {
+                userId: currentUser.id,
+                accountNumber: generateAccountNumber(),
+                balance: 1000, // Welcome bonus
+                pin: document.getElementById('ac-pin').value,
+                homeAddress: document.getElementById('ac-home-address').value,
+                phone: document.getElementById('ac-phone-number').value,
+                email: document.getElementById('ac-email').value,
+                transactions: []
+            };
+            accounts.push(newAccount);
+            DB.saveAccounts(accounts);
+            currentAccount = newAccount;
+            
+            // Now show dashboard
+            populateBillers();
+            updateDashboard();
+            showPage('dashboard');
+        };
+        
+        const handlePinAuthorization = (e) => {
+            e.preventDefault();
+            const enteredPin = document.getElementById('transaction-pin').value;
+            
+            if (pinAction === 'fund') {
+                const ADMIN_PIN = "5555"; // SUPER INSECURE: For demo only.
+                if (enteredPin === ADMIN_PIN) {
+                    processFunding();
+                } else {
+                    displayError('pin-error', 'Invalid Admin PIN.');
+                }
+            } else {
+                 if (enteredPin === currentAccount.pin) {
+                    hideAllModals();
+                    hideError('pin-error');
+                    document.getElementById('pin-entry-form').reset();
+                    if (pinAction === 'send') processSendMoney();
+                    if (pinAction === 'bill') processPayBill();
+                } else {
+                    displayError('pin-error', 'Incorrect PIN.');
+                }
+            }
+        };
+
+        const processFunding = () => {
+            const amount = parseFloat(transactionData.amount);
+            currentAccount.balance += amount;
+            
+            currentAccount.transactions.push({
+                 description: "Wallet Funding",
+                 date: new Date().toLocaleDateString(),
+                 amount: amount,
+                 type: 'received',
+                 statusClass: 'status-received'
+            });
+            
+            saveAndUpdate();
+            hideAllModals();
+            alert(`Successfully funded your wallet with ${formatCurrency(amount)}`);
+        };
+        
+        const processSendMoney = () => {
+            const amount = parseFloat(transactionData.amount);
+            if (amount > currentAccount.balance) {
+                return alert('Insufficient balance.');
+            }
+            
+            currentAccount.balance -= amount;
+            
+            const description = `Transfer to ${transactionData.recipientName}`;
+            currentAccount.transactions.push({
+                description: description,
+                date: new Date().toLocaleDateString(),
+                amount: amount,
+                type: 'sent',
+                statusClass: 'status-sent'
+            });
+
+            saveAndUpdate();
+            showReceipt(transactionData);
+            // Simulated SMS/Email
+            console.log(`SMS/Email Sent: You sent ${formatCurrency(amount)} to ${transactionData.recipientName}. Ref: ${transactionData.refCode}`);
+        };
+        
+        const processPayBill = () => {
+            const amount = parseFloat(transactionData.amount);
+             if (amount > currentAccount.balance) {
+                return alert('Insufficient balance.');
+            }
+            
+            currentAccount.balance -= amount;
+            
+            const description = `Bill Payment for ${transactionData.recipientName}`;
+            currentAccount.transactions.push({
+                description: description,
+                date: new Date().toLocaleDateString(),
+                amount: amount,
+                type: 'sent',
+                statusClass: 'status-sent'
+            });
+            
+            saveAndUpdate();
+            showReceipt(transactionData);
+            console.log(`SMS/Email Sent: You paid a bill of ${formatCurrency(amount)} to ${transactionData.recipientName}. Ref: ${transactionData.refCode}`);
+        };
+        
+        const saveAndUpdate = () => {
+             const accounts = DB.getAccounts();
+             const accountIndex = accounts.findIndex(acc => acc.userId === currentUser.id);
+             if(accountIndex > -1) {
+                 accounts[accountIndex] = currentAccount;
+                 DB.saveAccounts(accounts);
+                 updateDashboard();
+             }
+        };
+        
+        const showReceipt = (data) => {
+            document.getElementById('receipt-amount').textContent = formatCurrency(data.amount);
+            document.getElementById('receipt-beneficiary-name').textContent = data.recipientName;
+            document.getElementById('receipt-beneficiary-bank').textContent = data.bank;
+            document.getElementById('receipt-beneficiary-account').textContent = data.account;
+            document.getElementById('receipt-ref-code').textContent = data.refCode;
+            
+            showModal('receipt');
+        };
+        
+        const handleLogout = () => {
+            currentUser = null;
+            currentAccount = null;
+            DB.logoutUser();
+            showPage('auth');
+            document.getElementById('login-form').reset();
+            document.getElementById('signup-form').reset();
+        };
+
+        // --- EVENT LISTENERS ---
+        // Auth navigation
+        document.getElementById('show-signup').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('login-form-container').classList.add('hidden');
+            document.getElementById('signup-form-container').classList.remove('hidden');
+        });
+        document.getElementById('show-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signup-form-container').classList.add('hidden');
+            document.getElementById('login-form-container').classList.remove('hidden');
+        });
+        
+        // Forms
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        document.getElementById('signup-form').addEventListener('submit', handleSignUp);
+        document.getElementById('account-creation-form').addEventListener('submit', handleAccountCreation);
+        document.getElementById('pin-entry-form').addEventListener('submit', handlePinAuthorization);
+
+        // Dashboard Actions
+        document.getElementById('send-money-btn').addEventListener('click', () => showModal('sendMoney'));
+        document.getElementById('pay-bills-btn').addEventListener('click', () => showModal('payBills'));
+        document.getElementById('fund-wallet-btn').addEventListener('click', () => showModal('fundWallet'));
+        document.getElementById('logout-button').addEventListener('click', handleLogout);
+
+        document.getElementById('send-money-form').addEventListener('submit', e => {
+            e.preventDefault();
+            pinAction = 'send';
+            transactionData = {
+                recipientName: document.getElementById('recipient-name').value,
+                bank: document.getElementById('recipient-bank').value,
+                account: document.getElementById('recipient-account').value,
+                amount: document.getElementById('send-amount').value,
+                refCode: generateReferenceCode()
+            };
+            document.getElementById('pin-modal-title').textContent = 'Authorize Transfer';
+            document.getElementById('pin-modal-prompt').textContent = `Enter your PIN to send ${formatCurrency(transactionData.amount)} to ${transactionData.recipientName}.`;
+            hideAllModals();
+            showModal('pinEntry');
+        });
+
+        document.getElementById('pay-bills-form').addEventListener('submit', e => {
+            e.preventDefault();
+            pinAction = 'bill';
+            const billerKey = document.getElementById('biller-select').value;
+            const billerInfo = billers[billerKey];
+            transactionData = {
+                recipientName: billerInfo.name,
+                bank: billerInfo.bank,
+                account: billerInfo.account,
+                amount: document.getElementById('bill-amount').value,
+                refCode: generateReferenceCode()
+            };
+            document.getElementById('pin-modal-title').textContent = 'Authorize Bill Payment';
+            document.getElementById('pin-modal-prompt').textContent = `Enter your PIN to pay ${formatCurrency(transactionData.amount)} to ${transactionData.recipientName}.`;
+            hideAllModals();
+            showModal('pinEntry');
+        });
+        
+        document.getElementById('fund-wallet-form').addEventListener('submit', e => {
+            e.preventDefault();
+            pinAction = 'fund';
+            transactionData = {
+                amount: document.getElementById('fund-amount').value
+            };
+            document.getElementById('pin-modal-title').textContent = 'Admin Authorization';
+            document.getElementById('pin-modal-prompt').textContent = 'This action requires a special admin PIN to proceed.';
+            hideAllModals();
+            showModal('pinEntry');
+        });
+
+        // Sidebar Menu Actions
+        document.getElementById('menu-qr-code').addEventListener('click', () => {
+             document.getElementById('qr-name').textContent = currentUser.name;
+             document.getElementById('qr-account').textContent = currentAccount.accountNumber;
+             const qrContainer = document.getElementById('qr-code-container');
+             // Using a simple API for QR code generation
+             qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${JSON.stringify({name: currentUser.name, account: currentAccount.accountNumber})}" alt="QR Code">`;
+             showModal('qrCode');
+        });
+        document.getElementById('menu-change-pin').addEventListener('click', () => showModal('changePin'));
+        document.getElementById('menu-change-password').addEventListener('click', () => showModal('changePass'));
+        
+        document.getElementById('statement-btn').addEventListener('click', () => {
+            alert('Statement download is unavailable, you can view your history on the dashboard.');
+        });
+        
+        // Modal Close Buttons
+        document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', hideAllModals));
+        document.getElementById('receipt-close-btn').addEventListener('click', hideAllModals);
+
+        // Receipt actions
+        document.getElementById('receipt-share-btn').addEventListener('click', () => {
+            const text = `Transaction Successful! Sent ${formatCurrency(transactionData.amount)} to ${transactionData.recipientName} (${transactionData.account}). Ref: ${transactionData.refCode}`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+
+        document.getElementById('receipt-download-btn').addEventListener('click', () => {
+             alert('PDF download error, please take a screenshot.');
+        });
+        
+        // --- APP INITIALIZATION ---
+        const init = () => {
+            currentUser = DB.getLoggedInUser();
+            if (currentUser) {
+                const accounts = DB.getAccounts();
+                currentAccount = accounts.find(acc => acc.userId === currentUser.id);
+                if (currentAccount) {
+                    populateBillers();
+                    updateDashboard();
+                    showPage('dashboard');
+                } else {
+                    showPage('accountCreation');
+                }
+            } else {
+                showPage('auth');
+            }
+        };
+
+        init();
+    });
+    </script>
+</body>
+</html>
+
